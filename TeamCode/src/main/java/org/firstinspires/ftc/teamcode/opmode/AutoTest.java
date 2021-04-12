@@ -39,18 +39,32 @@ public class AutoTest extends LinearOpMode {
 
         if (isStopRequested()) return;
 
-        Trajectory traj = drive.trajectoryBuilder(new Pose2d())
-                .splineTo(new Vector2d(30, 30), 0)
+        /**
+          * length = 17.75, width = 17.5
+          * 1. read randomisation
+          * 2. shoot rings
+          * 3. ? collect more
+          * 4. score first wobble
+          * 5. go for second wobble
+          * 6. score second wobble
+          * 7. park
+          */
+
+        Pose2d start = new Pose2d(-63, -48, 0);
+        drive.setPoseEstimate(start);
+
+        Trajectory traj1 = drive.trajectoryBuilder(start)
+                .splineTo(new Vector2d(-0.62, -36), 0)
                 .build();
 
-        drive.followTrajectory(traj);
+        Trajectory traj2 = drive.trajectoryBuilder(traj1.end())
+                .splineToLinearHeading(new Pose2d(36, 12, Math.toRadians(180)), 0)
+                .build();
 
-        sleep(2000);
 
-        drive.followTrajectory(
-                drive.trajectoryBuilder(traj.end(), true)
-                        .splineTo(new Vector2d(0, 0), Math.toRadians(180))
-                        .build()
-        );
+
+
+        drive.followTrajectory(traj1);
+        drive.followTrajectory(traj2);
     }
 }

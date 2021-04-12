@@ -20,7 +20,7 @@ public class WobbleClaw {
         rot.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         rot.setPower(0);
 
-        claw.setPosition(POS_DEFAULT);
+        claw.setPosition(POS_GRAB);
         on = false;
     }
 
