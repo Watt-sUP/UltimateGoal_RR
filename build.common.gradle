@@ -21,6 +21,12 @@ apply plugin: 'com.android.application'
 
 android {
 
+    lintOptions {
+        abortOnError false
+        ignoreWarnings true
+        quiet true
+    }
+
     compileSdkVersion 29
 
     signingConfigs {
@@ -107,8 +113,8 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_7
-        targetCompatibility JavaVersion.VERSION_1_7
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
     }
 
     sourceSets.main {
