@@ -19,6 +19,7 @@ import org.firstinspires.ftc.teamcode.hardware.MugurelRR;
 public class AutoTest extends LinearOpMode {
     public ElapsedTime runtime = new ElapsedTime();
     private MugurelRR robot;
+    private int rnd = 2;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -53,18 +54,52 @@ public class AutoTest extends LinearOpMode {
         Pose2d start = new Pose2d(-63, -48, 0);
         drive.setPoseEstimate(start);
 
-        Trajectory traj1 = drive.trajectoryBuilder(start)
-                .splineTo(new Vector2d(-0.62, -36), 0)
+        // Read randomisation
+
+        Trajectory toShoot = drive.trajectoryBuilder(start)
+                .splineToSplineHeading(new Pose2d(-50, -48, Math.toRadians(7)), 0)
                 .build();
+        drive.followTrajectory(toShoot);
 
-        Trajectory traj2 = drive.trajectoryBuilder(traj1.end())
-                .splineToLinearHeading(new Pose2d(36, 12, Math.toRadians(180)), 0)
+        // Shoot rings
+        sleep(1000);
+
+        Pose2d square = new Pose2d();
+        if(rnd == 0) {
+            square = new Pose2d(0, -60, 0);
+        } else if(rnd == 1) {
+            square = new Pose2d(24, -36, 0);
+        } else if(rnd == 2) {
+            square = new Pose2d(48, -60, 0);
+        }
+
+        Trajectory toSquare = drive.trajectoryBuilder(toShoot.end())
+                .splineToSplineHeading(square, 0)
                 .build();
+        drive.followTrajectory(toSquare);
 
+        // Score pre-loaded wobble
+        sleep(1000);
 
+        Trajectory toWobble2 = drive.trajectoryBuilder(toSquare.end())
+                .splineToSplineHeading(new Pose2d(-40, -24, Math.toRadians(180)), Math.toRadians(180))
+                .build();
+        drive.followTrajectory(toWobble2);
 
+        // Grab 2nd wobble
+        sleep(1000);
 
-        drive.followTrajectory(traj1);
-        drive.followTrajectory(traj2);
+        Trajectory toSquare2 = drive.trajectoryBuilder(toWobble2.end())
+                .splineToSplineHeading(square, 0)
+                .build();
+        drive.followTrajectory(toSquare2);
+
+        // Score 2nd wobble
+        sleep(1000);
+
+        Trajectory toPark = drive.trajectoryBuilder(toSquare2.end())
+                .splineToLinearHeading(new Pose2d(0, -37, 0), 0)
+                .build();
+        drive.followTrajectory(toPark);
     }
 }
