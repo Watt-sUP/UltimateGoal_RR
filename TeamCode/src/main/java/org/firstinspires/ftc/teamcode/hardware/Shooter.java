@@ -14,14 +14,14 @@ public class Shooter {
     private static final double MAX_POWER = 1.0;
     private static final double MAX_TIME = 788;
 
-    private static final double POS_LIFT_DOWN = 0.73;
-    private static final double POS_LIFT_UP = 0.40;
+    private static final double POS_LIFT_DOWN = 0.74;
+    private static final double POS_LIFT_UP = 0.47;
 
-    private static final double POS_ANGLE_TOWER = 0.35;
+    private static final double POS_ANGLE_TOWER = 0.4;
     private static final double POS_ANGLE_POWERSHOT = 0.9;
 
-    private static final double POS_PUSH_RING = 0.7;
-    private static final double POS_PUSH_RESET = 0.45;
+    private static final double POS_PUSH_RING = 0.5;
+    private static final double POS_PUSH_RESET = 0.25;
 
     public ElapsedTime runtime;
 
@@ -33,7 +33,8 @@ public class Shooter {
 
         on = false;
         pushing = false;
-        motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         lift.setPosition(POS_LIFT_DOWN);
 
         push.setPosition(POS_PUSH_RESET);
@@ -74,6 +75,16 @@ public class Shooter {
         }
     }
 
+    public void pushRingSync() {
+        if( Math.abs(lift.getPosition() - POS_LIFT_DOWN) < 0.001 ) return;
+
+        double endTime = runtime.milliseconds() + 1000;
+        push.setPosition(POS_PUSH_RING);
+        while (runtime.milliseconds() < endTime) { ; }
+        push.setPosition(POS_PUSH_RESET);
+        while (runtime.milliseconds() < endTime + 1000) { ; }
+    }
+
     public void Up (boolean change){
         if(change)  lift.setPosition(POS_LIFT_UP);
     }
@@ -89,6 +100,10 @@ public class Shooter {
     public void angleTower() {
         angleChanger.setPosition(POS_ANGLE_TOWER);
     }
+
+    public void setAngle(double ang) { angleChanger.setPosition(ang); }
+
+    public void incAngle(double ang) { angleChanger.setPosition(ang + angleChanger.getPosition() ); }
 
     public void changeAngleState(boolean change) {
         if(change) {

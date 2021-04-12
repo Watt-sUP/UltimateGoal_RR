@@ -26,6 +26,8 @@ public class AutoTest extends LinearOpMode {
 
         robot = new MugurelRR(hardwareMap, telemetry, this, runtime);
         SampleMecanumDrive drive = robot.drive;
+        robot.shooter.setAngle(0.6);
+        robot.shooter.Up(true);
 
         telemetry.addData("Status", "Initialized");
         telemetry.update();
@@ -51,55 +53,63 @@ public class AutoTest extends LinearOpMode {
           * 7. park
           */
 
+        robot.shooter.setState(1);
+
         Pose2d start = new Pose2d(-63, -48, 0);
         drive.setPoseEstimate(start);
 
         // Read randomisation
 
         Trajectory toShoot = drive.trajectoryBuilder(start)
-                .splineToSplineHeading(new Pose2d(-50, -48, Math.toRadians(7)), 0)
+                .lineToLinearHeading(new Pose2d(-63 + 24.87185, -48 + 13.32551, Math.toRadians(5)))
                 .build();
         drive.followTrajectory(toShoot);
 
         // Shoot rings
-        sleep(1000);
+        robot.shooter.pushRingSync();
+        robot.shooter.pushRingSync();
+        robot.shooter.pushRingSync();
 
-        Pose2d square = new Pose2d();
-        if(rnd == 0) {
-            square = new Pose2d(0, -60, 0);
-        } else if(rnd == 1) {
-            square = new Pose2d(24, -36, 0);
-        } else if(rnd == 2) {
-            square = new Pose2d(48, -60, 0);
-        }
+        robot.shooter.setState(0);
 
-        Trajectory toSquare = drive.trajectoryBuilder(toShoot.end())
-                .splineToSplineHeading(square, 0)
-                .build();
-        drive.followTrajectory(toSquare);
-
-        // Score pre-loaded wobble
-        sleep(1000);
-
-        Trajectory toWobble2 = drive.trajectoryBuilder(toSquare.end())
-                .splineToSplineHeading(new Pose2d(-40, -24, Math.toRadians(180)), Math.toRadians(180))
-                .build();
-        drive.followTrajectory(toWobble2);
-
-        // Grab 2nd wobble
-        sleep(1000);
-
-        Trajectory toSquare2 = drive.trajectoryBuilder(toWobble2.end())
-                .splineToSplineHeading(square, 0)
-                .build();
-        drive.followTrajectory(toSquare2);
-
-        // Score 2nd wobble
-        sleep(1000);
-
-        Trajectory toPark = drive.trajectoryBuilder(toSquare2.end())
-                .splineToLinearHeading(new Pose2d(0, -37, 0), 0)
-                .build();
-        drive.followTrajectory(toPark);
+//        sleep(1000);
+//
+//        Pose2d square = new Pose2d();
+//        if(rnd == 0) {
+//            square = new Pose2d(0, -60, 0);
+//        } else if(rnd == 1) {
+//            square = new Pose2d(24, -36, 0);
+//        } else if(rnd == 2) {
+//            square = new Pose2d(48, -60, 0);
+//        }
+//
+//        Trajectory toSquare = drive.trajectoryBuilder(toShoot.end())
+//                .splineToSplineHeading(square, 0)
+//                .build();
+//        drive.followTrajectory(toSquare);
+//
+//        // Score pre-loaded wobble
+//        sleep(1000);
+//
+//        Trajectory toWobble2 = drive.trajectoryBuilder(toSquare.end())
+//                .splineToSplineHeading(new Pose2d(-40, -24, Math.toRadians(180)), Math.toRadians(180))
+//                .build();
+//        drive.followTrajectory(toWobble2);
+//
+//        // Grab 2nd wobble
+//        sleep(1000);
+//
+//        Trajectory toSquare2 = drive.trajectoryBuilder(toWobble2.end())
+//                .splineToSplineHeading(square, 0)
+//                .build();
+//        drive.followTrajectory(toSquare2);
+//
+//        // Score 2nd wobble
+//        sleep(1000);
+//
+//        Trajectory toPark = drive.trajectoryBuilder(toSquare2.end())
+//                .splineToLinearHeading(new Pose2d(0, -37, 0), 0)
+//                .build();
+//        drive.followTrajectory(toPark);
     }
 }

@@ -54,6 +54,7 @@ public class MugurelRR {
         runtime = _runtime;
         init();
         shooter.runtime = runtime;
+        collector.setRuntime(runtime);
     }
 
     public void setTelemetry (Telemetry _t) { telemetry = _t; }

@@ -5,21 +5,23 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 
 public class WobbleClaw {
-    private DcMotor rot;
+    public DcMotor rot;
     private Servo claw;
     private boolean on;
-    private static final double MAX_POWER = 0.4;
+    private static final double MAX_POWER = 0.7;
 
-    private static final double POS_DEFAULT = 0.0;
-    private static final double POS_GRAB = 1.0;
+    private static final double POS_DEFAULT = 1.0;
+    private static final double POS_GRAB = 0.0;
 
     private static final int POS_UP = 0;
-    private static final int POS_DOWN = 0;
+    private static final int POS_DOWN = -4191;
+    private static final int POS_MID = -1607;
 
     public WobbleClaw(DcMotor _motor, Servo _claw) {
         rot = _motor; claw = _claw;
 
         rot.setDirection(DcMotorSimple.Direction.FORWARD);
+        rot.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         rot.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         rot.setPower(0);
 
@@ -36,6 +38,9 @@ public class WobbleClaw {
     }
 
     public void setRotatePower(double power) {
+        if(DcMotor.RunMode.RUN_TO_POSITION == rot.getMode() && Math.abs(power) < 0.1)   {
+            return;
+        }
         rot.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         rot.setPower(MAX_POWER * power);
     }
@@ -52,6 +57,12 @@ public class WobbleClaw {
     public void down() {
         rot.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         rot.setTargetPosition(POS_DOWN);
+        rot.setPower(1.0);
+    }
+
+    public void mid() {
+        rot.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        rot.setTargetPosition(POS_MID);
         rot.setPower(1.0);
     }
 
