@@ -49,20 +49,20 @@ public class WobbleClaw {
     public void release() { claw.setPosition(POS_DEFAULT); on = false; }
 
     public void up() {
-        rot.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         rot.setTargetPosition(POS_UP);
+        rot.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         rot.setPower(1.0);
     }
 
     public void down() {
-        rot.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         rot.setTargetPosition(POS_DOWN);
+        rot.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         rot.setPower(1.0);
     }
 
     public void mid() {
-        rot.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         rot.setTargetPosition(POS_MID);
+        rot.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         rot.setPower(1.0);
     }
 

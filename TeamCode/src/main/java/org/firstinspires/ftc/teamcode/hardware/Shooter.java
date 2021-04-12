@@ -17,7 +17,7 @@ public class Shooter {
     private static final double POS_LIFT_DOWN = 0.74;
     private static final double POS_LIFT_UP = 0.47;
 
-    private static final double POS_ANGLE_TOWER = 0.4;
+    private static final double POS_ANGLE_TOWER = 0.45;
     private static final double POS_ANGLE_POWERSHOT = 0.9;
 
     private static final double POS_PUSH_RING = 0.5;

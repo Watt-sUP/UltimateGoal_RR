@@ -66,7 +66,7 @@ public class DriverControledRR extends LinearOpMode {
             if(gaju.dpad_left.pressed())  robot.drive.setPoseEstimate(poseReset);
             shoot(andrei.y, andrei.x, andrei.dpad_up, andrei.dpad_down);
             angleChange(andrei.right_bumper);
-            woobleClaw(andrei.left_y, andrei.left_bumper, andrei.left_trigger.toButton(0.3),andrei.right_trigger.toButton(0.3));
+            woobleClaw(andrei.left_y, andrei.left_bumper, gaju.left_bumper,gaju.right_bumper);
 
             robot.collector.update();
 
@@ -119,7 +119,7 @@ public class DriverControledRR extends LinearOpMode {
 
 //        robot.shooter.Up(true);
 //        robot.collector.setState(0.0);
-        robot.collector.setStateEnd0(runtime.milliseconds() + 1000);
+//        robot.collector.setStateEnd0(runtime.milliseconds() + 1000);
         robot.shooter.setState(1.0);
 
         going = true;
@@ -160,7 +160,7 @@ public class DriverControledRR extends LinearOpMode {
     private void woobleClaw(Axis rotate, Button grab, Button mid, Button down) {
         robot.claw.changeState(grab.pressed());
         robot.claw.setRotatePower(-rotate.raw);
-        if(mid.pressed()) robot.claw.mid();
-        if(down.pressed())  robot.claw.down();
+        if(mid.pressed()) { robot.claw.grab(); sleep(350); robot.claw.mid();  }
+        if(down.pressed())  { robot.claw.release(); sleep(350); robot.claw.down();  }
     }
 }

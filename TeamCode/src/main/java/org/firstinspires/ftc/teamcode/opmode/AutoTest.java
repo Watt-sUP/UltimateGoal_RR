@@ -56,6 +56,7 @@ public class AutoTest extends LinearOpMode {
         robot.shooter.setState(1);
 
         Pose2d start = new Pose2d(-63, -48, 0);
+        Pose2d parkPose = new Pose2d(-63 + 77.0733, -48 + 35.45123, 0);
         drive.setPoseEstimate(start);
 
         // Read randomisation
