@@ -15,6 +15,7 @@ public class WobbleClaw {
 
     private static final int POS_UP = 0;
     private static final int POS_DOWN = -4191;
+    private static final int POS_LOWMID = -3591;
     private static final int POS_MID = -1607;
 
     public WobbleClaw(DcMotor _motor, Servo _claw) {
@@ -62,6 +63,12 @@ public class WobbleClaw {
 
     public void mid() {
         rot.setTargetPosition(POS_MID);
+        rot.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        rot.setPower(1.0);
+    }
+
+    public void lowmid() {
+        rot.setTargetPosition(POS_LOWMID);
         rot.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         rot.setPower(1.0);
     }

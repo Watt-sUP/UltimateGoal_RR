@@ -191,14 +191,88 @@ public class AutoTest extends LinearOpMode {
         sleep(200);
         robot.claw.grab();
         sleep(500);
+        robot.claw.lowmid();
+
+        Pose2d w2drop = new Pose2d(-63 + 56.54664, -48 -11.0542, Math.toRadians(-45));
+
+        Trajectory toSquare2 = drive.trajectoryBuilder(toW2.end())
+//        Trajectory toSquare = drive.trajectoryBuilder(toShoot.end())
+                .lineToLinearHeading(w2drop)
+                .build();
+        drive.followTrajectory(toSquare2);
+
+        robot.claw.down();
+        while(robot.claw.rot.isBusy());
+        robot.claw.release();
+        sleep(500);
         robot.claw.mid();
     }
 
     void scenario1() {
         Pose2d square = new Pose2d(-63 + 86.26319863181189, -48 + 11.82659794210107, Math.toRadians(2.99459));
+        Trajectory toSquare = drive.trajectoryBuilder(start)
+//        Trajectory toSquare = drive.trajectoryBuilder(toShoot.end())
+                .splineToLinearHeading(square, Math.toRadians(0))
+                .build();
+        drive.followTrajectory(toSquare);
+
+        robot.claw.down();
+        while(robot.claw.rot.isBusy());
+        robot.claw.release();
+        sleep(500);
+        robot.claw.mid();
+
+        Pose2d wobble2 = new Pose2d(-63 + 32.316362, -48 + 30.121708, Math.toRadians(180));
+
+        Trajectory back2 = drive.trajectoryBuilder(toSquare.end())
+                .back(12)
+                .build();
+        drive.followTrajectory(back2);
+
+        robot.claw.down();
+
+        Trajectory toW2 = drive.trajectoryBuilder(back2.end())
+                .lineToLinearHeading(wobble2)
+//                .addTemporalMarker(1, () -> { robot.claw.down(); })
+                .build();
+        drive.followTrajectory(toW2);
+        sleep(200);
+        robot.claw.grab();
+        sleep(500);
+        robot.claw.mid();
     }
 
     void scenario4() {
         Pose2d square = new Pose2d(-63 + 104, -40 -8.7063435793775, Math.toRadians(-50));
+        Trajectory toSquare = drive.trajectoryBuilder(start)
+//        Trajectory toSquare = drive.trajectoryBuilder(toShoot.end())
+                .splineToLinearHeading(square, Math.toRadians(0))
+                .build();
+        drive.followTrajectory(toSquare);
+
+        robot.claw.down();
+        while(robot.claw.rot.isBusy());
+        robot.claw.release();
+        sleep(500);
+        robot.claw.mid();
+
+        Pose2d wobble2 = new Pose2d(-63 + 31.216362, -48 + 26.121708, Math.toRadians(180));
+
+        Trajectory back2 = drive.trajectoryBuilder(toSquare.end())
+                .back(12)
+                .build();
+        drive.followTrajectory(back2);
+
+        robot.claw.down();
+
+        Trajectory toW2 = drive.trajectoryBuilder(back2.end())
+                .lineToLinearHeading(wobble2)
+//                .addTemporalMarker(1, () -> { robot.claw.down(); })
+                .build();
+        drive.followTrajectory(toW2);
+        sleep(200);
+        robot.claw.grab();
+        sleep(500);
+        robot.claw.mid();
     }
 }
