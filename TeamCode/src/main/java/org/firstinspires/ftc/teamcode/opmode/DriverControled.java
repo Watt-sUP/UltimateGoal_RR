@@ -85,6 +85,7 @@ public class DriverControled extends LinearOpMode {
 
 //            telemetry.addData("Servo", lift.getPosition());
             telemetry.addData("Left Shoot", robot.shooter.motor.getCurrentPosition());
+
             telemetry.update();
         }
 

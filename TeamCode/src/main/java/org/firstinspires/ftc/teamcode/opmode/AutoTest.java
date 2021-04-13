@@ -10,6 +10,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.hardware.MugurelRR;
+import org.firstinspires.ftc.teamcode.hardware.RingIdentifier;
 
 /*
  * This is an example of a more complex path to really test the tuning.
@@ -19,12 +20,15 @@ import org.firstinspires.ftc.teamcode.hardware.MugurelRR;
 public class AutoTest extends LinearOpMode {
     public ElapsedTime runtime = new ElapsedTime();
     private MugurelRR robot;
-    private int rnd = 2;
+    private int rnd = 0;
+    private RingIdentifier ring;
 
     @Override
     public void runOpMode() throws InterruptedException {
 
         robot = new MugurelRR(hardwareMap, telemetry, this, runtime);
+        ring = new RingIdentifier(hardwareMap);
+        ring.setTelemetry(telemetry);
         SampleMecanumDrive drive = robot.drive;
         robot.shooter.setAngle(0.6);
         robot.shooter.Up(true);
@@ -37,6 +41,7 @@ public class AutoTest extends LinearOpMode {
             telemetry.update();
         }
         runtime.reset();
+        ring.init();
 
         waitForStart();
 
@@ -60,11 +65,13 @@ public class AutoTest extends LinearOpMode {
         drive.setPoseEstimate(start);
 
         // Read randomisation
+        rnd = ring.getRecognition();
 
         Trajectory toShoot = drive.trajectoryBuilder(start)
-                .lineToLinearHeading(new Pose2d(-63 + 24.87185, -48 + 13.32551, Math.toRadians(5)))
+                .lineToLinearHeading(new Pose2d(-63 + 25.3, -48 + 13.32551, Math.toRadians(3)))
                 .build();
         drive.followTrajectory(toShoot);
+
 
         // Shoot rings
         robot.shooter.pushRingSync();
@@ -72,6 +79,44 @@ public class AutoTest extends LinearOpMode {
         robot.shooter.pushRingSync();
 
         robot.shooter.setState(0);
+
+
+        Pose2d square = new Pose2d();
+        if(rnd == 0) {
+            square = new Pose2d(-63 + 63.44664, -48 -10.25542, 0);
+        } else if(rnd == 1) {
+            square = new Pose2d(-63 + 100, -40 -8.7063435793775, Math.toRadians(-50));
+        } else if(rnd == 2) {
+            square = new Pose2d(-63 + 86.26319863181189, -48 + 11.82659794210107, Math.toRadians(2.99459));
+        }
+
+        Trajectory toSquare = drive.trajectoryBuilder(toShoot.end())
+              .lineToLinearHeading(new Pose2d(-63 + 77.0733, -48 + 35.45123, 0))
+              .build();
+        drive.followTrajectory(toSquare);
+
+
+
+       /* Trajectory toSquare1 = drive.trajectoryBuilder(toShoot.end())
+                .splineToLinearHeading(new Pose2d(-63 + 63.44664, -48 -10.25542, 0), 0)
+                .build();
+        drive.followTrajectory(toSquare1);
+
+        sleep(1000);
+
+        Trajectory toSquare2 = drive.trajectoryBuilder(toSquare1.end())
+                .splineToLinearHeading(new Pose2d(-63 + 86.26319863181189, -48 + 11.82659794210107, Math.toRadians(2.99459)), 0)
+                .build();
+        drive.followTrajectory(toSquare2);
+
+        sleep(1000);
+
+        Trajectory toSquare3 = drive.trajectoryBuilder(toSquare2.end())
+                .lineToLinearHeading(new Pose2d(-63 + 100, -40 -8.7063435793775, Math.toRadians(-50)))
+                .build();
+        drive.followTrajectory(toSquare3);
+
+        */
 
 //        sleep(1000);
 //

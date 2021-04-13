@@ -161,6 +161,6 @@ public class DriverControledRR extends LinearOpMode {
         robot.claw.changeState(grab.pressed());
         robot.claw.setRotatePower(-rotate.raw);
         if(mid.pressed()) { robot.claw.grab(); sleep(350); robot.claw.mid();  }
-        if(down.pressed())  { robot.claw.release(); sleep(350); robot.claw.down();  }
+        if(down.pressed())  { robot.claw.down();  }
     }
 }
