@@ -124,6 +124,9 @@ public class TFDetection extends LinearOpMode {
                       // step through the list of recognitions and display boundary info.
                       int i = 0;
                       for (Recognition recognition : updatedRecognitions) {
+                          telemetry.addData("heigth", recognition.getHeight());
+                          telemetry.addData("width", recognition.getWidth());
+                          telemetry.addData("rap", recognition.getHeight() / recognition.getWidth());
                         telemetry.addData(String.format("label (%d)", i), recognition.getLabel());
                         telemetry.addData(String.format("  left,top (%d)", i), "%.03f , %.03f",
                                           recognition.getLeft(), recognition.getTop());
@@ -171,3 +174,4 @@ public class TFDetection extends LinearOpMode {
         tfod.loadModelFromAsset(TFOD_MODEL_ASSET, LABEL_FIRST_ELEMENT, LABEL_SECOND_ELEMENT);
     }
 }
+;

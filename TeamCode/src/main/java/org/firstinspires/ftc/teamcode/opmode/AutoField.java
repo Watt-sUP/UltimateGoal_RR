@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.opmode;
 
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -13,7 +14,7 @@ import org.firstinspires.ftc.teamcode.hardware.Config;
 import org.firstinspires.ftc.teamcode.hardware.Mugurel;
 
 @Autonomous(name="AutoField" , group="Linear Opmode")
-//@Disabled
+@Disabled
 public class AutoField extends LinearOpMode {
 
     public ElapsedTime runtime = new ElapsedTime();

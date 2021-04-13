@@ -1,11 +1,6 @@
 package org.firstinspires.ftc.teamcode.opmode;
 
-import com.acmerobotics.dashboard.FtcDashboard;
-import com.acmerobotics.roadrunner.geometry.Pose2d;
-import com.acmerobotics.roadrunner.geometry.Vector2d;
-import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -16,9 +11,9 @@ import org.firstinspires.ftc.teamcode.hardware.RingIdentifier;
 /*
  * This is an example of a more complex path to really test the tuning.
  */
-@Autonomous(name="AutoTest" , group="Linear Opmode")
+@Autonomous(name="RingD" , group="Linear Opmode")
 //@Disabled
-public class AutoTest extends LinearOpMode {
+public class RingDectection extends LinearOpMode {
     public ElapsedTime runtime = new ElapsedTime();
     private MugurelRR robot;
     private int rnd = 0;
@@ -27,14 +22,14 @@ public class AutoTest extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
 
-        robot = new MugurelRR(hardwareMap, telemetry, this, runtime);
+//        robot = new MugurelRR(hardwareMap, telemetry, this, runtime);
         ring = new RingIdentifier(hardwareMap);
         ring.setTelemetry(telemetry);
-        SampleMecanumDrive drive = robot.drive;
-        robot.shooter.setAngle(0.6);
-        robot.shooter.Up(true);
+//        SampleMecanumDrive drive = robot.drive;
+//        robot.shooter.setAngle(0.6);
+//        robot.shooter.Up(true);
         ring.init();
-
+        // Read randomisation
         telemetry.addData("Status", "Initialized");
 
         while (!opModeIsActive() && !isStopRequested()) {
@@ -63,12 +58,17 @@ public class AutoTest extends LinearOpMode {
         telemetry.addData("Rand", rnd);
         telemetry.update();
 
-        Pose2d start = new Pose2d(-63, -48, 0);
-        Pose2d parkPose = new Pose2d(-63 + 77.0733, -48 + 35.45123, 0);
-        drive.setPoseEstimate(start);
+        while(opModeIsActive()) {
+            ;
+        }
 
+
+//        Pose2d start = new Pose2d(-63, -48, 0);
+//        Pose2d parkPose = new Pose2d(-63 + 77.0733, -48 + 35.45123, 0);
+//        drive.setPoseEstimate(start);
+//
 //        Trajectory toShoot = drive.trajectoryBuilder(start)
-//                .splineToLinearHeading(new Pose2d(-63 + 25.3, -48 + 13.32551, Math.toRadians(3)), Math.toRadians(90))
+//                .lineToLinearHeading(new Pose2d(-63 + 25.3, -48 + 13.32551, Math.toRadians(3)))
 //                .build();
 //        drive.followTrajectory(toShoot);
 
@@ -80,51 +80,27 @@ public class AutoTest extends LinearOpMode {
 //        robot.shooter.pushRingSync();
 //
 //        robot.shooter.setState(0);
-//            sleep(1500);
+//
 //        // Collect more rings
 //
 //
-        Pose2d square = new Pose2d();
-        if(rnd == 0) {
-            square = new Pose2d(-63 + 63.44664, -48 -10.25542, 0);
-        } else if(rnd == 1) {
-            square = new Pose2d(-63 + 86.26319863181189, -48 + 11.82659794210107, Math.toRadians(2.99459));
-        } else if(rnd == 2) {
-            square = new Pose2d(-63 + 104, -40 -8.7063435793775, Math.toRadians(-50));
-        }
-
-        Trajectory toSquare = drive.trajectoryBuilder(start)
+//        Pose2d square = new Pose2d();
+//        if(rnd == 0) {
+//            square = new Pose2d(-63 + 63.44664, -48 -10.25542, 0);
+//        } else if(rnd == 1) {
+//            square = new Pose2d(-63 + 100, -40 -8.7063435793775, Math.toRadians(-50));
+//        } else if(rnd == 2) {
+//            square = new Pose2d(-63 + 86.26319863181189, -48 + 11.82659794210107, Math.toRadians(2.99459));
+//        }
+//
 //        Trajectory toSquare = drive.trajectoryBuilder(toShoot.end())
-              .splineToLinearHeading(square, Math.toRadians(0))
-              .build();
-        drive.followTrajectory(toSquare);
-
-        robot.claw.down();
-        while(robot.claw.rot.isBusy());
-        robot.claw.release();
-        sleep(500);
-        robot.claw.mid();
-
-        Pose2d wobble2 = new Pose2d(-63 + 32.316362, -48 + 30.121708, Math.toRadians(180));
-
-        Trajectory back2 = drive.trajectoryBuilder(toSquare.end())
-                .back(12)
-                .build();
-        drive.followTrajectory(back2);
-
-        robot.claw.down();
-
-        Trajectory toW2 = drive.trajectoryBuilder(back2.end())
-                .lineToLinearHeading(wobble2)
-//                .addTemporalMarker(1, () -> { robot.claw.down(); })
-                .build();
-        drive.followTrajectory(toW2);
-        sleep(200);
-        robot.claw.grab();
-        sleep(500);
-        robot.claw.mid();
-
-        while(opModeIsActive());
+//              .lineToLinearHeading(square)
+//              .build();
+//        drive.followTrajectory(toSquare);
+//
+//        robot.claw.down();
+//        robot.claw.release();
+//        sleep(500);
 //
 //        Trajectory toPark = drive.trajectoryBuilder(toSquare.end())
 //                .lineToLinearHeading(parkPose)

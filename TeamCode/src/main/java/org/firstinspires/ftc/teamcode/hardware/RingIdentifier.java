@@ -29,6 +29,7 @@
 
 package org.firstinspires.ftc.teamcode.hardware;
 
+import com.acmerobotics.dashboard.FtcDashboard;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -92,6 +93,7 @@ public class RingIdentifier  {
         tfodParameters.minResultConfidence = 0.6f;
         tfod = ClassFactory.getInstance().createTFObjectDetector(tfodParameters, vuforia);
         tfod.loadModelFromAsset(TFOD_MODEL_ASSET, LABEL_FIRST_ELEMENT, LABEL_SECOND_ELEMENT);
+//        tfod.setZoom(4.5, 16.0/9.0);
     }
 
    public void start (){
@@ -106,29 +108,47 @@ public class RingIdentifier  {
         initVuforia();
         initTfod();
         start();
-        tfod.setZoom(4.5, 16.0/9.0);
    }
 
 
 
    public int getRecognition (){
-       List<Recognition> updatedRecognitions = tfod.getUpdatedRecognitions();
+       List<Recognition> updatedRecognitions = tfod.getRecognitions();
       if (updatedRecognitions != null){
-          telemetry.addData("# Object Detected", updatedRecognitions.size());
+//          telemetry.addData("# Object Detected", updatedRecognitions.size());
               for (Recognition recognition : updatedRecognitions ) {
-                  if (recognition.getLabel().equals(LABEL_FIRST_ELEMENT)) {
-                      telemetry.addData(String.format("label (%d)"), recognition.getLabel());
-                      return 1;
-                  }
-                  else
-                  if (recognition.getLabel().equals(LABEL_SECOND_ELEMENT)) {
-                      telemetry.addData(String.format("label (%d)"), recognition.getLabel());
-                      return 2;
-                  }
+                  double w = recognition.getWidth();
+                  double h = recognition.getHeight();
+                  if(w / h < 0.7)   return 1;
+                  return 2;
               }
-              telemetry.update();
+//              telemetry.update();
       }
       return  0;
+   }
+
+   public int getRand() {
+       int count = 30;
+       int[] fq = new int[3];
+       for (int i = 0; i < count; i++) {
+           int where = getRecognition();
+           telemetry.addData(new Integer(i).toString(), where);
+           telemetry.update();
+           if (where != -1)
+               fq[where]++;
+       }
+       telemetry.addData("fq 0", fq[0]);
+       telemetry.addData("fq 1", fq[1]);
+       telemetry.addData("fq 2", fq[2]);
+       telemetry.update();
+       int mx = -1, id = -1;
+       for (int i = 0; i < 3; i++)
+           if (fq[i] > mx) {
+               mx = fq[i];
+               id = i;
+           }
+       stop();
+       return id;
    }
 
 
@@ -140,12 +160,11 @@ public class RingIdentifier  {
 
 
 
-public RingIdentifier (HardwareMap _hm){
- hardwareMap = _hm;
-
-}
-public void setTelemetry(Telemetry _t) { telemetry = _t; }
-public void setOpmode(LinearOpMode _o) { opmode = _o; }
+    public RingIdentifier (HardwareMap _hm){
+     hardwareMap = _hm;
+    }
+    public void setTelemetry(Telemetry _t) { telemetry = _t; }
+    public void setOpmode(LinearOpMode _o) { opmode = _o; }
 
 
 }
