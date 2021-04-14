@@ -162,8 +162,10 @@ public class AutoTest extends LinearOpMode {
 
     void scenario0() {
         Pose2d square = new Pose2d(-63 + 63.44664, -48 -10.25542, 0);
+        Pose2d w2drop = new Pose2d(-63 + 56.54664, -48 -10.0542, Math.toRadians(-37));
+        Pose2d wobble2 = new Pose2d(-63 + 32.316362, -48 + 30.121708, Math.toRadians(180));
+
         Trajectory toSquare = drive.trajectoryBuilder(start)
-//        Trajectory toSquare = drive.trajectoryBuilder(toShoot.end())
                 .splineToLinearHeading(square, Math.toRadians(0))
                 .build();
         drive.followTrajectory(toSquare);
@@ -174,7 +176,6 @@ public class AutoTest extends LinearOpMode {
         sleep(500);
         robot.claw.mid();
 
-        Pose2d wobble2 = new Pose2d(-63 + 32.316362, -48 + 30.121708, Math.toRadians(180));
 
         Trajectory back2 = drive.trajectoryBuilder(toSquare.end())
                 .back(12)
@@ -188,15 +189,14 @@ public class AutoTest extends LinearOpMode {
 //                .addTemporalMarker(1, () -> { robot.claw.down(); })
                 .build();
         drive.followTrajectory(toW2);
+
         sleep(200);
         robot.claw.grab();
         sleep(500);
         robot.claw.lowmid();
 
-        Pose2d w2drop = new Pose2d(-63 + 56.54664, -48 -11.0542, Math.toRadians(-45));
 
         Trajectory toSquare2 = drive.trajectoryBuilder(toW2.end())
-//        Trajectory toSquare = drive.trajectoryBuilder(toShoot.end())
                 .lineToLinearHeading(w2drop)
                 .build();
         drive.followTrajectory(toSquare2);
@@ -205,7 +205,27 @@ public class AutoTest extends LinearOpMode {
         while(robot.claw.rot.isBusy());
         robot.claw.release();
         sleep(500);
-        robot.claw.mid();
+        robot.claw.up();
+
+       /* Trajectory toShoot = drive.trajectoryBuilder(toSquare2.end())
+                .splineToLinearHeading(new Pose2d(-63 + 23, -48 + 13.32551, Math.toRadians(-2)), Math.toRadians(90))
+                .addTemporalMarker(1, () -> { robot.shooter.setState(1.0); })
+                .build();
+        drive.followTrajectory(toShoot);
+
+
+
+        robot.shooter.pushRingSync();
+        robot.shooter.pushRingSync();
+        robot.shooter.pushRingSync();
+        robot.shooter.setState(0);
+        */
+
+        Trajectory toPark = drive.trajectoryBuilder(toSquare2.end())
+                .lineToLinearHeading(parkPose)
+                .build();
+        drive.followTrajectory(toPark);
+
     }
 
     void scenario1() {
