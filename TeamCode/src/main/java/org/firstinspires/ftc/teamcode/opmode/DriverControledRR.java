@@ -76,6 +76,8 @@ public class DriverControledRR extends LinearOpMode {
             telemetry.addData("position", robot.claw.rot.getCurrentPosition());
             telemetry.addData("angle", robot.shooter.angleChanger.getPosition());
             telemetry.addData("mode", mode);
+            telemetry.addData("shooting rps", robot.shooter.motor.getVelocity() / robot.shooter.motor.getMotorType().getTicksPerRev() * 60.0);
+            telemetry.addData("shooting pos", robot.shooter.motor.getCurrentPosition());
             telemetry.update();
 
         }

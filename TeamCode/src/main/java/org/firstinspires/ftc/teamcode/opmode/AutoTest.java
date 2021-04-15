@@ -293,7 +293,7 @@ public class AutoTest extends LinearOpMode {
         robot.collector.setState(0.0);
 
         Trajectory grabWb = drive.trajectoryBuilder(toW2.end())
-                .forward(2, new MinVelocityConstraint(
+                .forward(2.5, new MinVelocityConstraint(
                                 Arrays.asList(
                                         new AngularVelocityConstraint(DriveConstants.MAX_ANG_VEL),
                                         new MecanumVelocityConstraint(15.0, DriveConstants.TRACK_WIDTH)

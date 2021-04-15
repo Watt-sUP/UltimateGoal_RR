@@ -1,12 +1,16 @@
 package org.firstinspires.ftc.teamcode.hardware;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.configuration.typecontainers.MotorConfigurationType;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.robotcore.external.navigation.Rotation;
+
 public class Shooter {
-    public DcMotor motor;
+    public DcMotorEx motor;
     public Servo lift, push, angleChanger;
 
     private double endTime;
@@ -25,24 +29,34 @@ public class Shooter {
 
     public ElapsedTime runtime;
 
-    public Shooter(DcMotor _left, Servo _push, Servo _lift, Servo _angleChanger) {
+    public Shooter(DcMotorEx _left, Servo _push, Servo _lift, Servo _angleChanger) {
         motor = _left;
+
+        MotorConfigurationType motor_cfg = motor.getMotorType().clone();
+        motor_cfg.setMaxRPM(6600);
+        motor_cfg.setTicksPerRev(28);
+        motor_cfg.setGearing(1);
+        motor_cfg.setOrientation(Rotation.CCW);
+        motor_cfg.setAchieveableMaxRPMFraction(1.0);
+        motor.setMotorType(motor_cfg);
+
         push = _push;
         lift = _lift;
         angleChanger = _angleChanger;
 
         on = false;
         pushing = false;
+
         motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        motor.setDirection(DcMotorSimple.Direction.FORWARD);
+
         lift.setPosition(POS_LIFT_DOWN);
 
         push.setPosition(POS_PUSH_RESET);
 
         tower = true;
         angleChanger.setPosition(POS_ANGLE_TOWER);
-
-        motor.setDirection(DcMotorSimple.Direction.FORWARD);
     }
 
     public void changeState(boolean change) {
