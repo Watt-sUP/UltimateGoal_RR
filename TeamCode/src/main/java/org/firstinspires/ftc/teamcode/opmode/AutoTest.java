@@ -4,14 +4,22 @@ import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
+import com.acmerobotics.roadrunner.trajectory.TrajectoryBuilder;
+import com.acmerobotics.roadrunner.trajectory.constraints.AngularVelocityConstraint;
+import com.acmerobotics.roadrunner.trajectory.constraints.MecanumVelocityConstraint;
+import com.acmerobotics.roadrunner.trajectory.constraints.MinVelocityConstraint;
+import com.acmerobotics.roadrunner.trajectory.constraints.ProfileAccelerationConstraint;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.teamcode.drive.DriveConstants;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.hardware.MugurelRR;
 import org.firstinspires.ftc.teamcode.hardware.RingIdentifier;
+
+import java.util.Arrays;
 
 /*
  * This is an example of a more complex path to really test the tuning.
@@ -230,8 +238,20 @@ public class AutoTest extends LinearOpMode {
 
     void scenario1() {
         Pose2d square = new Pose2d(-63 + 86.26319863181189, -48 + 11.82659794210107, Math.toRadians(2.99459));
-        Trajectory toSquare = drive.trajectoryBuilder(start)
-//        Trajectory toSquare = drive.trajectoryBuilder(toShoot.end())
+        Pose2d shootPose = new Pose2d(-5, -48, Math.toRadians(10));
+        Pose2d collect = new Pose2d(-8, -35, Math.toRadians(180));
+        Pose2d wobble2 = new Pose2d(-63 + 35, -48 + 28.61708, Math.toRadians(180));
+        Pose2d w2drop = new Pose2d(-63 + 82.26319863181189, -48 + 0.82659794210107, Math.toRadians(2.99459));
+
+        Trajectory toShoot = drive.trajectoryBuilder(start)
+                .splineToLinearHeading(shootPose, Math.toRadians(45))
+                .build();
+        drive.followTrajectory(toShoot);
+
+        sleep(1000);
+        robot.claw.lowmid();
+
+        Trajectory toSquare = drive.trajectoryBuilder(toShoot.end())
                 .splineToLinearHeading(square, Math.toRadians(0))
                 .build();
         drive.followTrajectory(toSquare);
@@ -242,30 +262,79 @@ public class AutoTest extends LinearOpMode {
         sleep(500);
         robot.claw.mid();
 
-        Pose2d wobble2 = new Pose2d(-63 + 32.316362, -48 + 30.121708, Math.toRadians(180));
+        robot.shooter.Down(true);
 
         Trajectory back2 = drive.trajectoryBuilder(toSquare.end())
                 .back(12)
                 .build();
         drive.followTrajectory(back2);
 
+
+
+        Trajectory toCollect = drive.trajectoryBuilder(back2.end())
+                .addTemporalMarker(1, () -> {robot.collector.setState(1.0);})
+                .splineToLinearHeading(collect, Math.toRadians(0))
+                .build();
+        drive.followTrajectory(toCollect);
+
         robot.claw.down();
 
-        Trajectory toW2 = drive.trajectoryBuilder(back2.end())
+        Trajectory Collect = drive.trajectoryBuilder(toCollect.end())
+                .forward(8)
+                .build();
+        drive.followTrajectory(Collect);
+
+        Trajectory toW2 = drive.trajectoryBuilder(Collect.end())
                 .lineToLinearHeading(wobble2)
-//                .addTemporalMarker(1, () -> { robot.claw.down(); })
                 .build();
         drive.followTrajectory(toW2);
+
+        robot.shooter.Up(true);
+        robot.collector.setState(0.0);
+
+        Trajectory grabWb = drive.trajectoryBuilder(toW2.end())
+                .forward(2, new MinVelocityConstraint(
+                                Arrays.asList(
+                                        new AngularVelocityConstraint(DriveConstants.MAX_ANG_VEL),
+                                        new MecanumVelocityConstraint(15.0, DriveConstants.TRACK_WIDTH)
+                                )
+                        ),
+                        new ProfileAccelerationConstraint(DriveConstants.MAX_ACCEL))
+                .build();
+        drive.followTrajectory(grabWb);
+
         sleep(200);
         robot.claw.grab();
         sleep(500);
-        robot.claw.mid();
+        robot.claw.lowmid();
+
+        Trajectory toSquare2 = drive.trajectoryBuilder(grabWb.end())
+                .lineToLinearHeading(w2drop)
+                .build();
+        drive.followTrajectory(toSquare2);
+
+        robot.claw.down();
+        while(robot.claw.rot.isBusy());
+        robot.claw.release();
+        sleep(500);
+        robot.claw.up();
+
+        Trajectory toPark = drive.trajectoryBuilder(toSquare2.end())
+                .lineToLinearHeading(parkPose)
+                .build();
+        drive.followTrajectory(toPark);
+
+
     }
 
     void scenario4() {
-        Pose2d square = new Pose2d(-63 + 104, -40 -8.7063435793775, Math.toRadians(-50));
+        Pose2d square = new Pose2d(46, -58.7, Math.toRadians(0));
+        Pose2d wobble2 = new Pose2d(-27, -16.5, Math.toRadians(180));
+        Pose2d collect = new Pose2d(-40, -34, Math.toRadians(0));
+        Pose2d square2 = new Pose2d(42, -57, Math.toRadians(-60));
+
+        robot.claw.lowmid();
         Trajectory toSquare = drive.trajectoryBuilder(start)
-//        Trajectory toSquare = drive.trajectoryBuilder(toShoot.end())
                 .splineToLinearHeading(square, Math.toRadians(0))
                 .build();
         drive.followTrajectory(toSquare);
@@ -276,9 +345,87 @@ public class AutoTest extends LinearOpMode {
         sleep(500);
         robot.claw.mid();
 
-        Pose2d wobble2 = new Pose2d(-63 + 31.216362, -48 + 26.121708, Math.toRadians(180));
-
         Trajectory back2 = drive.trajectoryBuilder(toSquare.end())
+                .back(19)
+                .build();
+        drive.followTrajectory(back2);
+
+
+        Trajectory toWobble = drive.trajectoryBuilder(back2.end())
+                .addTemporalMarker(1, () -> {robot.claw.down();})
+                .splineToLinearHeading(wobble2, Math.toRadians(-145))
+                .build();
+        drive.followTrajectory(toWobble);
+
+        Trajectory grabWb = drive.trajectoryBuilder(toWobble.end())
+                .forward(2, new MinVelocityConstraint(
+                                Arrays.asList(
+                                        new AngularVelocityConstraint(DriveConstants.MAX_ANG_VEL),
+                                        new MecanumVelocityConstraint(15.0, DriveConstants.TRACK_WIDTH)
+                                )
+                        ),
+                        new ProfileAccelerationConstraint(DriveConstants.MAX_ACCEL))
+                .build();
+        drive.followTrajectory(grabWb);
+
+        sleep(200);
+        robot.claw.grab();
+        sleep(500);
+        robot.claw.mid();
+
+        robot.shooter.Down(true);
+        robot.collector.setState(1.0);
+
+        Trajectory toRings = drive.trajectoryBuilder(grabWb.end())
+                .splineToLinearHeading(collect, Math.toRadians(-45))
+                .build();
+        drive.followTrajectory(toRings);
+
+        Trajectory Collect = drive.trajectoryBuilder(toRings.end())
+                .forward(20,
+                        new MinVelocityConstraint(
+                                Arrays.asList(
+                                        new AngularVelocityConstraint(DriveConstants.MAX_ANG_VEL),
+                                        new MecanumVelocityConstraint(15.0, DriveConstants.TRACK_WIDTH)
+                                )
+                        ),
+                        new ProfileAccelerationConstraint(DriveConstants.MAX_ACCEL))
+                .build();
+        drive.followTrajectory(Collect);
+
+        sleep(1000);
+        robot.shooter.Up(true);
+        robot.collector.setState(0.0);
+        sleep(1000);
+        robot.claw.lowmid();
+
+
+        Trajectory toWb2 = drive.trajectoryBuilder(Collect.end())
+                .addTemporalMarker(1, () -> {robot.claw.lowmid();})
+                .lineToLinearHeading(square2)
+                .build();
+        drive.followTrajectory(toWb2);
+
+        robot.claw.down();
+        while(robot.claw.rot.isBusy());
+        robot.claw.release();
+        sleep(500);
+
+        Trajectory toPark = drive.trajectoryBuilder(toWb2.end())
+                .addTemporalMarker(1, () -> {robot.claw.up();})
+                .lineToLinearHeading(parkPose)
+                .build();
+        drive.followTrajectory(toPark);
+
+
+
+
+
+
+
+
+
+        /*Trajectory back2 = drive.trajectoryBuilder(toSquare.end())
                 .back(12)
                 .build();
         drive.followTrajectory(back2);
@@ -293,6 +440,6 @@ public class AutoTest extends LinearOpMode {
         sleep(200);
         robot.claw.grab();
         sleep(500);
-        robot.claw.mid();
+        robot.claw.mid();*/
     }
 }
