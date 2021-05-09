@@ -16,16 +16,16 @@ public class Shooter {
     private double endTime;
     private boolean on, pushing, tower;
     private static final double MAX_POWER = 1.0;
-    private static final double MAX_TIME = 788;
+    private static final double MAX_TIME = 600;
 
-    private static final double POS_LIFT_DOWN = 0.74;
-    private static final double POS_LIFT_UP = 0.44;
+    private static final double POS_LIFT_DOWN = 0.73;
+    private static final double POS_LIFT_UP = 0.45;
 
-    private static final double POS_ANGLE_TOWER = 0.45;
-    private static final double POS_ANGLE_POWERSHOT = 0.9;
+    private static final double POS_ANGLE_TOWER = 0.44;
+    private static final double POS_ANGLE_POWERSHOT = 0.55;
 
     private static final double POS_PUSH_RING = 0.5;
-    private static final double POS_PUSH_RESET = 0.25;
+    private static final double POS_PUSH_RESET = 0.22;
 
     public ElapsedTime runtime;
 
@@ -92,11 +92,11 @@ public class Shooter {
     public void pushRingSync() {
         if( Math.abs(lift.getPosition() - POS_LIFT_DOWN) < 0.001 ) return;
 
-        double endTime = runtime.milliseconds() + 1000;
+        double endTime = runtime.milliseconds() + 700;
         push.setPosition(POS_PUSH_RING);
         while (runtime.milliseconds() < endTime) { ; }
         push.setPosition(POS_PUSH_RESET);
-        while (runtime.milliseconds() < endTime + 1000) { ; }
+        while (runtime.milliseconds() < endTime + 700) { ; }
     }
 
     public void Up (boolean change){
