@@ -128,7 +128,7 @@ public class RingIdentifier  {
    }
 
    public int getRand() {
-       int count = 30;
+       int count = 35;
        int[] fq = new int[3];
        for (int i = 0; i < count; i++) {
            int where = getRecognition();

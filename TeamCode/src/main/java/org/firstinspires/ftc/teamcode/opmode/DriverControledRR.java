@@ -69,6 +69,8 @@ public class DriverControledRR extends LinearOpMode {
             angleChange(andrei.right_bumper);
             woobleClaw(andrei.left_y, andrei.left_bumper, gaju.left_bumper,gaju.right_bumper);
 
+
+
             robot.collector.update();
 
             if(andrei.dpad_left.pressed())    robot.shooter.incAngle(0.05);

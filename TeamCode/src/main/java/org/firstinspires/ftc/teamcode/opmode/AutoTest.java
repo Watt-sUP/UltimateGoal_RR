@@ -44,7 +44,7 @@ public class AutoTest extends LinearOpMode {
         ring = new RingIdentifier(hardwareMap);
         ring.setTelemetry(telemetry);
         drive = robot.drive;
-        robot.shooter.setAngle(0.44);
+        robot.shooter.setAngle(0.35);
         robot.shooter.Up(true);
         ring.init();
         drive.setPoseEstimate(start);
@@ -168,10 +168,10 @@ public class AutoTest extends LinearOpMode {
     }
 
     void scenario0() {
-        Pose2d square = new Pose2d(-63 + 63.44664, -48 -10.25542, 0);
+        Pose2d square = new Pose2d(-63 + 63.44664, -48 -9.25542, 0);
         Pose2d w2drop = new Pose2d(-63 + 56.54664, -48 -10.0542, Math.toRadians(-37));
-        Pose2d wobble2 = new Pose2d(-63 + 32.316362, -48 + 30.121708, Math.toRadians(180));
-        Pose2d shootPose = new Pose2d(-5, -48, Math.toRadians(12.5));
+        Pose2d wobble2 = new Pose2d(-63 + 31.316362, -48 + 30.121708, Math.toRadians(180));
+        Pose2d shootPose = new Pose2d(-14.5, -48, Math.toRadians(11.5));
 
         robot.shooter.setState(1);
 
@@ -239,7 +239,7 @@ public class AutoTest extends LinearOpMode {
         Pose2d square = new Pose2d(-63 + 86.26319863181189, -48 + 11.82659794210107, Math.toRadians(2.99459));
         Pose2d shootPose = new Pose2d(-5, -48, Math.toRadians(12.5));
         Pose2d collect = new Pose2d(-8, -35, Math.toRadians(180));
-        Pose2d wobble2 = new Pose2d(-63 + 35, -48 + 30.1, Math.toRadians(180));
+        Pose2d wobble2 = new Pose2d(-63 + 35, -48 + 30.1, Math.toRadians(175));
         Pose2d w2drop = new Pose2d(-63 + 82.26319863181189, -48 + 3.82659794210107, Math.toRadians(2.99459));
         Pose2d shootPose2 = new Pose2d(-10, -48, Math.toRadians(10));
 
@@ -415,10 +415,10 @@ public class AutoTest extends LinearOpMode {
 //        robot.collector.setState(1.0);
 
         robot.shooter.setState(1);
-        robot.shooter.setAngle(0.52);
+        robot.shooter.setAngle(0.35);
 
         Trajectory toRings = drive.trajectoryBuilder(grabWb.end())
-                .splineToLinearHeading(collect, Math.toRadians(-45))
+                .splineToLinearHeading(collect, Math.toRadians(-47))
                 .build();
         drive.followTrajectory(toRings);
 
@@ -444,7 +444,7 @@ public class AutoTest extends LinearOpMode {
         drive.followTrajectory(Collect);
 
         robot.shooter.setState(1);
-        robot.shooter.setAngle(0.46);
+        robot.shooter.setAngle(0.34);
         sleep(1000);
         robot.shooter.Up(true);
         sleep(200);

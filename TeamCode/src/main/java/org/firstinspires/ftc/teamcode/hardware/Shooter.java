@@ -18,11 +18,11 @@ public class Shooter {
     private static final double MAX_POWER = 1.0;
     private static final double MAX_TIME = 600;
 
-    private static final double POS_LIFT_DOWN = 0.73;
-    private static final double POS_LIFT_UP = 0.45;
+    private static final double POS_LIFT_DOWN = 0.8;
+    private static final double POS_LIFT_UP = 0.25;
 
-    private static final double POS_ANGLE_TOWER = 0.44;
-    private static final double POS_ANGLE_POWERSHOT = 0.55;
+    private static final double POS_ANGLE_TOWER = 0.34;
+    private static final double POS_ANGLE_POWERSHOT = 0.44;
 
     private static final double POS_PUSH_RING = 0.5;
     private static final double POS_PUSH_RESET = 0.22;

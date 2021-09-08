@@ -46,6 +46,7 @@ public class WobbleClaw {
         rot.setPower(MAX_POWER * power);
     }
 
+
     public void grab() { claw.setPosition(POS_GRAB); on = true; }
     public void release() { claw.setPosition(POS_DEFAULT); on = false; }
 
