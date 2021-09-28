@@ -12,9 +12,8 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 public class Mugurel {
 
     public Runner runner;
-    public Collector collector;
-    public Shooter shooter;
-    public WobbleClaw claw;
+    public Brat brat;
+    public DcMotor rul;
 
     public HardwareMap hardwareMap;
     public Telemetry telemetry;
@@ -29,19 +28,14 @@ public class Mugurel {
                 hardwareMap.get(DcMotorEx.class, Config.right_front)
         );
 
-        collector = new Collector(hardwareMap.get(DcMotorEx.class, Config.collector));
-
-        shooter = new Shooter(
-                hardwareMap.get(DcMotorEx.class, Config.left_shoot),
-                hardwareMap.get(Servo.class, Config.push),
-                hardwareMap.get(Servo.class, Config.lift),
-                hardwareMap.get(Servo.class, Config.angleChanger)
+        brat = new Brat(
+                hardwareMap.get(DcMotor.class, Config.extinsBrat),
+                hardwareMap.get(DcMotor.class, Config.rotBrat),
+                hardwareMap.get(Servo.class, Config.cutie)
         );
 
-        claw = new WobbleClaw(
-               hardwareMap.get(DcMotorEx.class, Config.rotBrat),
-               hardwareMap.get(Servo.class, Config.stransBrat)
-        );
+        rul = hardwareMap.get(DcMotor.class, Config.ruleta);
+        rul.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     }
 
     public Mugurel () {}
@@ -57,7 +51,6 @@ public class Mugurel {
         opMode = opmode;
         runtime = _runtime;
         init();
-        shooter.runtime = runtime;
     }
 
     public void setTelemetry (Telemetry _t) { telemetry = _t; }
